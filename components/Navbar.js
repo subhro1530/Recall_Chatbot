@@ -6,8 +6,9 @@ import {
   useColorModeValue,
   Button,
   Text,
+  Image,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { HamburgerIcon } from "@chakra-ui/icons";
 import Logout from "./Logout";
 
 export default function Navbar() {
@@ -21,9 +22,8 @@ export default function Navbar() {
           display={{ md: "none" }}
         />
         <HStack spacing={8} alignItems="center">
-          <Text fontSize="lg" fontWeight="bold" color="white">
-            Dashboard
-          </Text>
+          <Image src="/logo.png" alt="Logo" width="100px" />
+          
           <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
             <Button variant="link" color="white">
               Home
