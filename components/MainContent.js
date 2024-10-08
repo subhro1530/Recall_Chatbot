@@ -1,5 +1,5 @@
-import { Box, SimpleGrid, Text, Flex, Button } from "@chakra-ui/react";
-import { Line, Pie } from "react-chartjs-2";
+import { Box, SimpleGrid, Button, Flex, VStack, Text } from "@chakra-ui/react";
+import { Line, Pie, Bar } from "react-chartjs-2"; // Added Bar chart
 import {
   Chart as ChartJS,
   LineElement,
@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend,
   ArcElement,
+  BarElement,
 } from "chart.js";
 import { useRouter } from "next/router";
 
@@ -20,7 +21,8 @@ ChartJS.register(
   PointElement,
   Tooltip,
   Legend,
-  ArcElement // Register ArcElement for Pie chart
+  ArcElement, // Pie chart
+  BarElement // Bar chart
 );
 
 export default function MainContent() {
@@ -69,7 +71,21 @@ export default function MainContent() {
     ],
   };
 
-  const lineChartOptions = {
+  // Data for bar chart (Revenue per Product)
+  const barChartData = {
+    labels: ["Product A", "Product B", "Product C", "Product D"],
+    datasets: [
+      {
+        label: "Revenue",
+        data: [300, 500, 700, 400],
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
     maintainAspectRatio: false,
     scales: {
       y: {
@@ -83,75 +99,129 @@ export default function MainContent() {
   };
 
   return (
-    <Box p={4} bg="gray.800" minH="calc(100vh - 64px)">
-      <Text fontSize="2xl" color="white" mb={4}>
+    <Box p={6} bg="gray.800" minH="calc(100vh - 64px)">
+      <Text fontSize="2xl" color="white" mb={6}>
         Welcome to Your Dashboard
       </Text>
 
-      {/* Grid for Cards */}
-      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={10} mb={8}>
-        <Box bg="gray.700" borderRadius="md" p={6} boxShadow="lg">
-          <Text fontSize="xl" color="white" mb={2}>
-            Analytics Overview
-          </Text>
-          <Text color="gray.400">
-            Keep track of the latest insights into your business.
-          </Text>
-        </Box>
-        <Box bg="gray.700" borderRadius="md" p={6} boxShadow="lg">
-          <Text fontSize="xl" color="white" mb={2}>
-            Recent Activities
-          </Text>
-          <Text color="gray.400">
-            Stay updated with recent events and actions.
-          </Text>
-        </Box>
-        <Box bg="gray.700" borderRadius="md" p={6} boxShadow="lg">
-          <Text fontSize="xl" color="white" mb={2}>
-            Profile Information
-          </Text>
-          <Text color="gray.400">
-            Manage your personal settings and preferences.
-          </Text>
-        </Box>
+      {/* Buttons for quick access */}
+      <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6} mb={8}>
+        <Button
+          colorScheme="teal"
+          size="lg"
+          onClick={() => router.push("/analytics")}
+        >
+          View Analytics
+        </Button>
+        <Button
+          colorScheme="teal"
+          size="lg"
+          onClick={() => router.push("/activities")}
+        >
+          View Activities
+        </Button>
+        <Button
+          colorScheme="teal"
+          size="lg"
+          onClick={() => router.push("/profile")}
+        >
+          Manage Profile
+        </Button>
       </SimpleGrid>
 
       {/* Chart Section */}
-      <Flex
-        direction="column"
-        bg="gray.700"
-        borderRadius="md"
-        p={6}
-        boxShadow="lg"
-        mb={8}
-      >
-        <Text fontSize="xl" color="white" mb={4}>
-          Sales Over Time
-        </Text>
-        <Box h="300px">
-          <Line data={lineChartData} options={lineChartOptions} />
-        </Box>
-      </Flex>
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8}>
+        {/* Line Chart Section */}
+        <Flex
+          direction="column"
+          bg="gray.700"
+          borderRadius="md"
+          p={6}
+          boxShadow="lg"
+        >
+          <Text fontSize="xl" color="white" mb={4}>
+            Sales Over Time
+          </Text>
+          <Box h="300px">
+            <Line data={lineChartData} options={chartOptions} />
+          </Box>
+          <Text color="gray.400" mt={4}>
+            Track how your sales are growing month by month. We provide
+            real-time updates.
+          </Text>
+        </Flex>
 
-      {/* Pie Chart Section */}
-      <Flex
-        direction="column"
-        bg="gray.700"
-        borderRadius="md"
-        p={6}
-        boxShadow="lg"
-        mb={8}
-      >
-        <Text fontSize="xl" color="white" mb={4}>
-          User Logins Over the Week
-        </Text>
-        <Box h="300px">
-          <Pie data={pieChartData} />
-        </Box>
-      </Flex>
+        {/* Pie Chart Section */}
+        <Flex
+          direction="column"
+          bg="gray.700"
+          borderRadius="md"
+          p={6}
+          boxShadow="lg"
+        >
+          <Text fontSize="xl" color="white" mb={4}>
+            User Logins Over the Week
+          </Text>
+          <Box h="300px">
+            <Pie data={pieChartData} />
+          </Box>
+          <Text color="gray.400" mt={4}>
+            Analyze daily user logins to understand user engagement patterns.
+          </Text>
+        </Flex>
+
+        {/* Bar Chart Section */}
+        <Flex
+          direction="column"
+          bg="gray.700"
+          borderRadius="md"
+          p={6}
+          boxShadow="lg"
+        >
+          <Text fontSize="xl" color="white" mb={4}>
+            Revenue by Product
+          </Text>
+          <Box h="300px">
+            <Bar data={barChartData} options={chartOptions} />
+          </Box>
+          <Text color="gray.400" mt={4}>
+            Keep track of how different products are performing in terms of
+            revenue.
+          </Text>
+        </Flex>
+
+        {/* Promotion Section */}
+        <Flex
+          direction="column"
+          bg="gray.700"
+          borderRadius="md"
+          p={6}
+          boxShadow="lg"
+        >
+          <Text fontSize="xl" color="white" mb={4}>
+            Promotions and Offers
+          </Text>
+          <Text color="gray.400" mb={4}>
+            Explore exciting promotions to boost your business.
+          </Text>
+          <Button
+            colorScheme="orange"
+            onClick={() => window.open("https://dummywebsite1.com", "_blank")}
+          >
+            Visit Promotion 1
+          </Button>
+          <Button
+            colorScheme="orange"
+            mt={4}
+            onClick={() => window.open("https://dummywebsite2.com", "_blank")}
+          >
+            Visit Promotion 2
+          </Button>
+        </Flex>
+      </SimpleGrid>
 
       {/* Navigate to Recall Page */}
-      <Button colorScheme="teal" onClick={handleNavigateToRecall} mt={4}>
+      <Button colorScheme="teal" onClick={handleNavigateToRecall} mt={8}>
         Go to Recall Page
       </Button>
     </Box>

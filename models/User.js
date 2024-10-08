@@ -10,6 +10,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  // Optional fields
+  bio: {
+    type: String,
+    default: "",
+  },
+  email: {
+    type: String,
+    required: true,
+  },
 });
 
 const User = mongoose.models.User || mongoose.model("User", UserSchema);
