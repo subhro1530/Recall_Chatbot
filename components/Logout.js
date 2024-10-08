@@ -8,7 +8,7 @@ export default function Logout() {
   };
 
   return (
-    <Button colorScheme="red" onClick={handleLogout}>
+    <Button ml={4} mt={5} mb={2} colorScheme="red" onClick={handleLogout}>
       Logout
     </Button>
   );

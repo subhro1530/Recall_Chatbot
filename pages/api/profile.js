@@ -1,7 +1,7 @@
 // pages/api/profile.js
-import dbConnect from "../../lib/db";
-import UserProfile from "../../../models/UserProfile";
 import { getSession } from "next-auth/react";
+import dbConnect from "../../lib/mongodb";
+import User from "../../models/User";
 
 export default async function handler(req, res) {
   const session = await getSession({ req });
@@ -12,27 +12,15 @@ export default async function handler(req, res) {
 
   await dbConnect();
 
-  if (req.method === "POST") {
-    const { username, bio, profilePicture } = req.body;
-
-    try {
-      // Update user profile by username
-      const updatedProfile = await UserProfile.findOneAndUpdate(
-        { username: session.user.name }, // Using the logged-in username
-        { bio, profilePicture },
-        { new: true }
-      );
-
-      if (!updatedProfile) {
-        return res.status(404).json({ message: "Profile not found" });
-      }
-
-      res.status(200).json(updatedProfile);
-    } catch (error) {
-      res.status(400).json({ message: error.message });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  const user = await User.findById(session.user.id); // Get user by ID from session
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
   }
+
+  // Return user profile data
+  res.status(200).json({
+    username: user.username,
+    bio: user.bio || "No bio available.",
+    profilePicture: user.profilePicture || "No profile picture available.",
+  });
 }
